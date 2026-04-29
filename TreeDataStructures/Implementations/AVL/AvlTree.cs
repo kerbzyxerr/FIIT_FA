@@ -22,9 +22,11 @@ public class AvlTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, AvlNode<
 
     protected override void RemoveNode(AvlNode<TKey, TValue> node)
     {
+        AvlNode<TKey, TValue>? repl;
+
         if (node.Left == null)
         {
-            AvlNode<TKey, TValue>? repl = node.Right;
+            repl = node.Right;
             Transplant(node, repl);
             OnNodeRemoved(node.Parent, repl);
             return;
@@ -32,13 +34,13 @@ public class AvlTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, AvlNode<
 
         if (node.Right == null)
         {
-            AvlNode<TKey, TValue>? repl = node.Left;
+            repl = node.Left;
             Transplant(node, repl);
             OnNodeRemoved(node.Parent, repl);
             return;
         }
 
-        AvlNode<TKey, TValue> repl = node.Right;
+        repl = node.Right;
         while (repl.Left != null)
         {
             repl = repl.Left;
