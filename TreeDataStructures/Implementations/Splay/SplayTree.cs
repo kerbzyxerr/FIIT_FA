@@ -85,13 +85,11 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
             }
             else if (node.IsRightChild && node.Parent.IsLeftChild)
             {
-                RotateLeft(node.Parent);
-                RotateRight(node.Parent);
+                RotateBigRight(node.Parent.Parent);
             }
             else
             {
-                RotateRight(node.Parent);
-                RotateLeft(node.Parent);
+                RotateBigLeft(node.Parent.Parent);
             }
         }
     }
