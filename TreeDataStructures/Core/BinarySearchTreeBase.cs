@@ -317,9 +317,9 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
                 TraversalStrategy.InOrder => MoveNextInOrder(),
                 TraversalStrategy.PreOrder => MoveNextPreOrder(),
                 TraversalStrategy.InOrderReverse => MoveNextInOrderReverse(),
-                TraversalStrategy.PreOrderReverse => MoveNextPostOrderReverse(),
+                TraversalStrategy.PreOrderReverse => MoveNextPreOrderReverse(),
                 TraversalStrategy.PostOrder => MoveNextPostOrder(),
-                TraversalStrategy.PostOrderReverse => MoveNextPreOrderReverse(),
+                TraversalStrategy.PostOrderReverse => MoveNextPostOrderReverse(),
                 _ => throw new NotImplementedException("Strategy not implemented")
             };
         }
@@ -437,7 +437,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
             switch (_strategy)
             {
                 case TraversalStrategy.PreOrder:
-                case TraversalStrategy.PostOrderReverse:
+                case TraversalStrategy.PreOrderReverse:
                     _stack.Push(new StackEntry(_root, 0));
                     break;
 
@@ -448,7 +448,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
                     break;
 
                 case TraversalStrategy.PostOrder:
-                case TraversalStrategy.PreOrderReverse:
+                case TraversalStrategy.PostOrderReverse:
                     _stack.Push(new StackEntry(_root, 0, false));
                     break;
 
