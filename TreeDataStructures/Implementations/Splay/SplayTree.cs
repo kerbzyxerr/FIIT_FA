@@ -61,14 +61,8 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
         {
             if (node.Parent.Parent == null)
             {
-                if (node.IsLeftChild)
-                {
-                    RotateRight(node.Parent);
-                }
-                else
-                {
-                    RotateLeft(node.Parent);
-                }
+                if (node.IsLeftChild) RotateRight(node.Parent);
+                else RotateLeft(node.Parent);
 
                 continue;
             }
@@ -83,14 +77,8 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
                 RotateLeft(node.Parent.Parent);
                 RotateLeft(node.Parent);
             }
-            else if (node.IsRightChild && node.Parent.IsLeftChild)
-            {
-                RotateBigRight(node.Parent.Parent);
-            }
-            else
-            {
-                RotateBigLeft(node.Parent.Parent);
-            }
+            else if (node.IsRightChild && node.Parent.IsLeftChild) RotateBigRight(node.Parent.Parent);
+            else RotateBigLeft(node.Parent.Parent);
         }
     }
 
@@ -104,10 +92,7 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
             lastVisited = current;
 
             int cmp = Comparer.Compare(key, current.Key);
-            if (cmp == 0)
-            {
-                return current;
-            }
+            if (cmp == 0) return current;
 
             current = cmp < 0 ? current.Left : current.Right;
         }

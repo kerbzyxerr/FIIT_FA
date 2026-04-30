@@ -58,10 +58,7 @@ public class AvlTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, AvlNode<
         repl.Left = node.Left;
         repl.Left.Parent = repl;
 
-        if (reb == node)
-        {
-            reb = repl;
-        }
+        if (reb == node) reb = repl;
 
         OnNodeRemoved(reb, repl);
     }

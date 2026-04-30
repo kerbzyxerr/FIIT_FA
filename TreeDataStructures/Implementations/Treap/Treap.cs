@@ -60,7 +60,6 @@ public class Treap<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, TreapNode<
         
         /* throw new NotImplementedException("Implement Merge operation"); */
     }
-    
 
     public override void Add(TKey key, TValue value)
     {
