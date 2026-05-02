@@ -59,7 +59,7 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
     {
         while (node?.Parent != null)
         {
-            if (node.Parent.Parent == null)
+            if(node.Parent.Parent == null)
             {
                 if (node.IsLeftChild) RotateRight(node.Parent);
                 else RotateLeft(node.Parent);
@@ -67,17 +67,17 @@ public class SplayTree<TKey, TValue> : BinarySearchTree<TKey, TValue>
                 continue;
             }
 
-            if (node.IsLeftChild && node.Parent.IsLeftChild)
+            if(node.IsLeftChild && node.Parent.IsLeftChild)
             {
                 RotateRight(node.Parent.Parent);
                 RotateRight(node.Parent);
             }
-            else if (node.IsRightChild && node.Parent.IsRightChild)
+            else if(node.IsRightChild && node.Parent.IsRightChild)
             {
                 RotateLeft(node.Parent.Parent);
                 RotateLeft(node.Parent);
             }
-            else if (node.IsRightChild && node.Parent.IsLeftChild) RotateBigRight(node.Parent.Parent);
+            else if(node.IsRightChild && node.Parent.IsLeftChild) RotateBigRight(node.Parent.Parent);
             else RotateBigLeft(node.Parent.Parent);
         }
     }

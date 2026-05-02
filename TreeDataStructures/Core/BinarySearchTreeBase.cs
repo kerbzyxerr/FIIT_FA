@@ -483,7 +483,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
         TNode? node = FindNode(item.Key);
         if(node == null) return false;
 
-        return EqualityComparer<TValue>.Default.Equals(node.Value, item.Value);
+        return true;
     }
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
@@ -502,7 +502,7 @@ public abstract class BinarySearchTreeBase<TKey, TValue, TNode>(IComparer<TKey>?
         TNode? node = FindNode(item.Key);
         if(node == null) return false;
 
-        if(!EqualityComparer<TValue>.Default.Equals(node.Value, item.Value)) return false;
+        if(Comparer<TValue>.Default.Compare(node.Value, item.Value) != 0) return false;
 
         RemoveNode(node);
         Count--;
