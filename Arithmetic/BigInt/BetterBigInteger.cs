@@ -6,17 +6,11 @@ namespace Arithmetic.BigInt;
 public sealed class BetterBigInteger : IBigInteger
 {
     private int _signBit;
-    private bool _isSmall;
+
     private uint _smallValue;
     private uint[]? _data;
 
     public bool IsNegative => _signBit == 1;
-
-    public BetterBigInteger()
-    {
-        SetZero();
-    }
-
     public BetterBigInteger(uint[] digits, bool isNegative = false)
     {
         if (digits is null) throw new ArgumentException("digits is null", nameof(digits));
@@ -112,14 +106,9 @@ public sealed class BetterBigInteger : IBigInteger
     {
         var hash = new HashCode();
         hash.Add(_signBit);
-
-        if (_isSmall) hash.Add(_smallValue);
-        else
+        foreach (uint digit in GetDigits())
         {
-            foreach (uint digit in _data!)
-            {
-                hash.Add(digit);
-            }
+            hash.Add(digit);
         }
 
         return hash.ToHashCode();
@@ -166,7 +155,7 @@ public sealed class BetterBigInteger : IBigInteger
     {
         if (shift < 0) throw new ArgumentException("shift is negative", nameof(shift));
 
-        if (a.IsZero()) return new BetterBigInteger();
+        if (a.IsZero()) return new BetterBigInteger([0]);
 
         if (shift == 0) return new BetterBigInteger(a.GetDigitsArray(), a.IsNegative);
 
@@ -178,7 +167,7 @@ public sealed class BetterBigInteger : IBigInteger
     {
         if (shift < 0) throw new ArgumentException("shift is negative", nameof(shift));
 
-        if (a.IsZero()) return new BetterBigInteger();
+        if (a.IsZero()) return new BetterBigInteger([0]);
 
         if (shift == 0) return new BetterBigInteger(a.GetDigitsArray(), a.IsNegative);
 
@@ -194,7 +183,7 @@ public sealed class BetterBigInteger : IBigInteger
         int wholeWords = shift / 32;
         int bitShift = shift % 32;
 
-        if (wholeWords >= digits.Length) return new BetterBigInteger();
+        if (wholeWords >= digits.Length) return new BetterBigInteger([0]);
 
         int resultLength = digits.Length - wholeWords;
         uint[] result = new uint[resultLength];
@@ -212,22 +201,14 @@ public sealed class BetterBigInteger : IBigInteger
         return new BetterBigInteger(TrimLeadingZeros(result), false);
     }
 
-    public static bool operator ==(BetterBigInteger? a, BetterBigInteger? b)
-    {
-        if (ReferenceEquals(a, b)) return true;
-
-        if (a is null || b is null) return false;
-
-        return a.Equals(b);
-    }
-
-    public static bool operator !=(BetterBigInteger? a, BetterBigInteger? b) => !(a == b);
+    public static bool operator ==(BetterBigInteger a, BetterBigInteger b) => Equals(a, b);
+    public static bool operator !=(BetterBigInteger a, BetterBigInteger b) => !Equals(a, b);
     public static bool operator <(BetterBigInteger a, BetterBigInteger b) => a.CompareTo(b) < 0;
     public static bool operator >(BetterBigInteger a, BetterBigInteger b) => a.CompareTo(b) > 0;
     public static bool operator <=(BetterBigInteger a, BetterBigInteger b) => a.CompareTo(b) <= 0;
     public static bool operator >=(BetterBigInteger a, BetterBigInteger b) => a.CompareTo(b) >= 0;
 
-    public override string ToString() => ToString(10);
+    /* public override string ToString() => ToString(10); */
 
     public string ToString(int radix)
     {
@@ -265,7 +246,7 @@ public sealed class BetterBigInteger : IBigInteger
         }
 
         int comparison = CompareAbsolute(GetDigits(), other.GetDigits());
-        if (comparison == 0) return new BetterBigInteger();
+        if (comparison == 0) return new BetterBigInteger([0]);
 
         if (comparison > 0)
         {
@@ -284,7 +265,7 @@ public sealed class BetterBigInteger : IBigInteger
 
     private BetterBigInteger Negate()
     {
-        if (IsZero()) return new BetterBigInteger();
+        if (IsZero()) return new BetterBigInteger([0]);
 
         return new BetterBigInteger(GetDigitsArray(), !IsNegative);
     }
@@ -307,33 +288,31 @@ public sealed class BetterBigInteger : IBigInteger
     private void SetZero()
     {
         _signBit = 0;
-        _isSmall = true;
         _smallValue = 0;
         _data = null;
     }
 
     private void SetDigits(uint[] digits, bool isNegative)
     {
-        uint[] normalizedDigits = TrimLeadingZeros(digits);
+        uint[] norm = TrimLeadingZeros(digits);
 
-        if (normalizedDigits.Length == 1 && normalizedDigits[0] == 0)
+        if (norm.Length == 1 && norm[0] == 0)
         {
             SetZero();
             return;
         }
 
-        if (normalizedDigits.Length == 1)
+        if (norm.Length == 1)
         {
             SetZero();
             _signBit = isNegative ? 1 : 0;
-            _smallValue = normalizedDigits[0];
+            _smallValue = norm[0];
             return;
         }
 
         _signBit = isNegative ? 1 : 0;
-        _isSmall = false;
         _smallValue = 0;
-        _data = normalizedDigits;
+        _data = norm;
 
         int length = _data.Length;
         while (length > 1 && _data[length - 1] == 0)
@@ -369,7 +348,7 @@ public sealed class BetterBigInteger : IBigInteger
 
     private static BetterBigInteger FromTwosComplement(uint[] twosComplementDigits)
     {
-        if (twosComplementDigits.Length == 0) return new BetterBigInteger();
+        if (twosComplementDigits.Length == 0) return new BetterBigInteger([0]);
 
         bool isNegative = (twosComplementDigits[^1] & 0x80000000) != 0;
         uint[] digits = (uint[])twosComplementDigits.Clone();
@@ -382,7 +361,7 @@ public sealed class BetterBigInteger : IBigInteger
 
         digits = TrimLeadingZeros(digits);
 
-        if (IsZeroDigits(digits)) return new BetterBigInteger();
+        if (IsZeroDigits(digits)) return new BetterBigInteger([0]);
 
         return new BetterBigInteger(digits, isNegative);
     }

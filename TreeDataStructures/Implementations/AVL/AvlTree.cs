@@ -2,8 +2,7 @@
 
 namespace TreeDataStructures.Implementations.AVL;
 
-public class AvlTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, AvlNode<TKey, TValue>>
-    where TKey : IComparable<TKey>
+public class AvlTree<TKey, TValue> : BinarySearchTreeBase<TKey, TValue, AvlNode<TKey, TValue>> 
 {
     protected override AvlNode<TKey, TValue> CreateNode(TKey key, TValue value)
     {
